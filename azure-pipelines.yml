@@ -1,0 +1,44 @@
+# pipeline para coleta de versão dos componentes do Boilerplate
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+  - checkout: self
+
+  - script: |
+      echo "- instalando do kubectl"
+      pwd
+      curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+      sudo chmod +x kubectl
+      ls -lhrt
+      sudo mv kubectl /usr/local/bin/
+    displayName: 'instalando o Kubectl'
+
+  - task: AzureCLI@2
+    inputs:
+      azureSubscription: 'connection to ctt-platforms-lab-01 subscription'
+      scriptType: 'bash'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        echo  $(System.AccessToken) | az devops login --organization https://dev.azure.com/CTTSandbox/
+        cd $(System.DefaultWorkingDirectory)
+        az aks get-credentials --resource-group $(resource_group) --name $(cluster_name) --admin
+        echo -e "\n - verificando funcionamento do kubectl:"
+        kubectl get nodes
+      addSpnToEnvironment: true
+      
+  - script: |
+      cd scripts
+      echo "Iniciando coleta de versionamento dos componentes do Cluster"
+      ./get-components.sh
+      echo "----------------------------------------------------------------"
+      echo -e "\n"
+      echo "- Versões coletadas nos componentes do Boilerplate: "
+      cat files/images-all-ns
+    displayName: 'versões dos componenetes'
+
+
