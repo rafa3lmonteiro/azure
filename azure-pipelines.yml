@@ -20,11 +20,11 @@ steps:
 
   - task: AzureCLI@2
     inputs:
-      azureSubscription: 'connection to ctt-platforms-lab-01 subscription'
+      azureSubscription: 'connection to acme-lab-01 subscription'
       scriptType: 'bash'
       scriptLocation: 'inlineScript'
       inlineScript: |
-        echo  $(System.AccessToken) | az devops login --organization https://dev.azure.com/CTTSandbox/
+        echo  $(System.AccessToken) | az devops login --organization https://dev.azure.com/acme/
         cd $(System.DefaultWorkingDirectory)
         az aks get-credentials --resource-group $(resource_group) --name $(cluster_name) --admin
         echo -e "\n - verificando funcionamento do kubectl:"
