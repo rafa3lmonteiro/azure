@@ -1,4 +1,4 @@
-# pipeline para coleta de versão dos componentes do Boilerplate
+# pipeline para coleta de versão dos componentes do AKS
 
 trigger:
 - main
