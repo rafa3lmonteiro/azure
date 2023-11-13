@@ -37,7 +37,7 @@ steps:
       ./get-components.sh
       echo "----------------------------------------------------------------"
       echo -e "\n"
-      echo "- Versões coletadas nos componentes do Boilerplate: "
+      echo "- Versões coletadas nos componentes do AKS: "
       cat files/images-all-ns
     displayName: 'versões dos componenetes'
 
